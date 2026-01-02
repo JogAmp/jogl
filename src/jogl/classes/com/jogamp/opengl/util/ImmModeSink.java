@@ -1118,34 +1118,34 @@ public class ImmModeSink {
 
     if(useV) {
        if(enable) {
-           shaderState.enableVertexAttribArray(glsl, vArrayData);
+           shaderState.enableAttribute(glsl, vArrayData);
            shaderState.vertexAttribPointer(glsl, vArrayData);
        } else {
-           shaderState.disableVertexAttribArray(glsl, vArrayData);
+           shaderState.disableAttribute(glsl, vArrayData);
        }
     }
     if(useC) {
        if(enable) {
-           shaderState.enableVertexAttribArray(glsl, cArrayData);
+           shaderState.enableAttribute(glsl, cArrayData);
            shaderState.vertexAttribPointer(glsl, cArrayData);
        } else {
-           shaderState.disableVertexAttribArray(glsl, cArrayData);
+           shaderState.disableAttribute(glsl, cArrayData);
        }
     }
     if(useN) {
        if(enable) {
-           shaderState.enableVertexAttribArray(glsl, nArrayData);
+           shaderState.enableAttribute(glsl, nArrayData);
            shaderState.vertexAttribPointer(glsl, nArrayData);
        } else {
-           shaderState.disableVertexAttribArray(glsl, nArrayData);
+           shaderState.disableAttribute(glsl, nArrayData);
        }
     }
     if(useT) {
        if(enable) {
-           shaderState.enableVertexAttribArray(glsl, tArrayData);
+           shaderState.enableAttribute(glsl, tArrayData);
            shaderState.vertexAttribPointer(glsl, tArrayData);
        } else {
-           shaderState.disableVertexAttribArray(glsl, tArrayData);
+           shaderState.disableAttribute(glsl, tArrayData);
        }
     }
     glslLocationSet = true; // ShaderState does set the location implicit

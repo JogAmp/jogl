@@ -187,9 +187,9 @@ public class FixedFuncPipeline {
         }
         shaderState.useProgram(gl, true);
         if(enable) {
-            shaderState.enableVertexAttribArray(gl, arrayName );
+            shaderState.enableAttribute(gl, arrayName );
         } else {
-            shaderState.disableVertexAttribArray(gl, arrayName );
+            shaderState.disableAttribute(gl, arrayName );
         }
         switch( glArrayIndex ) {
             case GLPointerFunc.GL_TEXTURE_COORD_ARRAY:
@@ -836,7 +836,7 @@ public class FixedFuncPipeline {
         if(colorVAEnabledDirty) {
             ud = shaderState.getActiveUniform(mgl_ColorEnabled);
             if(null!=ud) {
-                final int ca = true == shaderState.isVertexAttribArrayEnabled(GLPointerFuncUtil.mgl_Color) ? 1 : 0 ;
+                final int ca = true == shaderState.isAttributeEnabled(GLPointerFuncUtil.mgl_Color) ? 1 : 0 ;
                 if(ca!=ud.intValue()) {
                     ud.setData(ca);
                     shaderState.send(gl, ud);

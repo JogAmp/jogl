@@ -112,9 +112,9 @@ public class GLSLArrayHandler extends GLVBOArrayHandler {
             st.vertexAttribPointer(glsl, ad);
         }
 
-        st.enableVertexAttribArray(glsl, ad);
+        st.enableAttribute(glsl, ad);
     } else {
-        st.disableVertexAttribArray(glsl, ad);
+        st.disableAttribute(glsl, ad);
     }
   }
 

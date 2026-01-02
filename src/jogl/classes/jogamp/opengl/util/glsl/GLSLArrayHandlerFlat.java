@@ -85,9 +85,9 @@ public class GLSLArrayHandlerFlat implements GLArrayHandlerFlat {
     if( null != ext ) {
         final ShaderState st = (ShaderState)ext;
         if(enable) {
-            st.enableVertexAttribArray(glsl, ad);
+            st.enableAttribute(glsl, ad);
         } else {
-            st.disableVertexAttribArray(glsl, ad);
+            st.disableAttribute(glsl, ad);
         }
     } else {
         final int location = ad.getLocation();
