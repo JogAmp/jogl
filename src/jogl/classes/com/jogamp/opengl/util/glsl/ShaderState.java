@@ -296,13 +296,10 @@ public final class ShaderState {
         return null != dl ? dl.location : -1;
     }
 
-    private void updateAttributeCache(final GLArrayData data) {
-        updateAttributeCache(data, -1);
+    private DataLoc updateAttributeCache(final GLArrayData data) {
+        return updateDataLoc(activeAttribDataMap.get(data.getName()), data, true);
     }
-    private DataLoc updateAttributeCache(final GLArrayData data, final int enabledVal) {
-        return updateDataLoc(activeAttribDataMap.get(data.getName()), data, enabledVal, true);
-    }
-    private DataLoc updateDataLoc(DataLoc dl, final GLArrayData data, final int enabledVal, final boolean mapNewInstance) {
+    private DataLoc updateDataLoc(DataLoc dl, final GLArrayData data, final boolean mapNewInstance) {
         if( null != dl ) {
             if( null != dl.data && dl.data == data ) {
                 dl.location = data.getLocation();
@@ -318,10 +315,9 @@ public final class ShaderState {
                 activeAttribDataMap.put(data.getName(), dl);
             }
         }
-        dl.setEnabled(enabledVal);
         return dl;
     }
-    private DataLoc updateDataLoc(DataLoc dl, final String name, final int location, final int enabledVal, final boolean mapNewInstance) {
+    private DataLoc updateDataLoc(DataLoc dl, final String name, final int location) {
         if( null != dl ) {
             if( null != dl.data ) {
                 dl.data.setLocation(location);
@@ -329,11 +325,7 @@ public final class ShaderState {
             dl.location = location;
         } else {
             dl = new DataLoc(name, location);
-            if( mapNewInstance) {
-                activeAttribDataMap.put(name, dl);
-            }
         }
-        dl.setEnabled(enabledVal);
         return dl;
     }
 
@@ -371,7 +363,7 @@ public final class ShaderState {
         attribute.associate(this, enable);
     }
 
-    public boolean isOwned(final GLArrayData attribute) {
+    public boolean isManaged(final GLArrayData attribute) {
         return managedAttributes.contains(attribute);
     }
 
@@ -428,18 +420,18 @@ public final class ShaderState {
             if(null==shaderProgram) throw new GLException("No program is attached");
             if(!shaderProgram.linked()) throw new GLException("Program is not linked");
             location = gl.glGetAttribLocation(shaderProgram.program(), name);
-            dl = updateDataLoc(dl, name, location, -1, false);
+            dl = updateDataLoc(dl, name, location);
             if( 0 <= location ) {
                 activeAttribDataMap.put(name, dl);
                 if(DEBUG) {
-                    System.err.println("ShaderState: resolveAttributeLocation(1): "+name+", loc: "+location);
+                    System.err.println("ShaderState: resolveLocation(1): "+name+", loc: "+location);
                 }
             } else {
                 if( forceMap ) {
                     activeAttribDataMap.put(name, dl);
                 }
                 if( verbose ) {
-                    System.err.println("ShaderState: resolveAttributeLocation(1) failed, no location for: "+name+", loc: "+location);
+                    System.err.println("ShaderState: resolveLocation(1) failed, no location for: "+name+", loc: "+location);
                     if(DEBUG) {
                         ExceptionUtils.dumpStack(System.err);
                     }
@@ -474,7 +466,7 @@ public final class ShaderState {
     }
     private DataLoc resolveLocation2(final GL2ES2 gl, final GLArrayData data, final boolean forceMap) {
         if ( data.hasLocation() ) {
-            return updateAttributeCache(data, -1);
+            return updateAttributeCache(data);
         }
         DataLoc dl = activeAttribDataMap.get(data.getName());
         final int location = null != dl ? dl.location : -1;
@@ -484,14 +476,14 @@ public final class ShaderState {
             if (null==shaderProgram) throw new GLException("No program is attached");
             if (!shaderProgram.linked()) throw new GLException("Program is not linked");
             if ( data.resolveLocation(gl, shaderProgram.program()) ) {
-                dl = updateDataLoc(dl, data, -1, true);
+                dl = updateDataLoc(dl, data, true);
                 if(DEBUG) {
-                    System.err.println("ShaderState: resolveAttributeLocation(2): "+data.getName()+", loc: "+data.getLocation());
+                    System.err.println("ShaderState: resolveLocation(2): "+data.getName()+", loc: "+data.getLocation());
                 }
             } else {
-                dl = updateDataLoc(dl, data, -1, forceMap);
+                dl = updateDataLoc(dl, data, forceMap);
                 if (verbose) {
-                    System.err.println("ShaderState: resolveAttributeLocation(2) failed, no location for: " + data.getName());
+                    System.err.println("ShaderState: resolveLocation(2) failed, no location for: " + data.getName());
                     if (DEBUG) {
                         ExceptionUtils.dumpStack(System.err);
                     }
@@ -773,10 +765,9 @@ public final class ShaderState {
 
     private final boolean relocateAttribute(final GL2ES2 gl, final DataLoc dl) {
         final GLArrayData data = dl.data;
-        final String name = data.getName();
         if( data.resolveLocation(gl, shaderProgram.program()) ) {
             if(DEBUG) {
-                System.err.println("ShaderState: relocateAttribute: "+name+", loc: "+data.getLocation());
+                System.err.println("ShaderState: relocateAttribute: "+data.getName()+", loc: "+data.getLocation());
             }
             if(dl.enabled) {
                 // enable attrib, VBO and pass location/data
