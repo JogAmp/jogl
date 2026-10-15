@@ -202,9 +202,11 @@ public class TestRegionRendererNEWT01 extends UITestCase {
         destroyWindow(window);
     }
 
+    @SuppressWarnings("unused")
     @Test
     public void test20RegionRendererR2T01() throws InterruptedException {
-        if(Platform.CPUFamily.X86 != PlatformPropsImpl.CPU_ARCH.family) { // FIXME
+        if(true || Platform.CPUFamily.X86 != PlatformPropsImpl.CPU_ARCH.family) {
+            // FIXME: Not viable for software MESA rendering
             // FIXME: Disabled for now - since it doesn't seem fit for mobile (performance wise).
             System.err.println("disabled on non desktop (x86) arch for now ..");
             return;
